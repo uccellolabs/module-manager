@@ -2,6 +2,7 @@
 
 namespace Uccello\RecordManager\Providers;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -51,5 +52,10 @@ class AppServiceProvider extends ServiceProvider
             __DIR__ . '/../../config/record-manager.php',
             'record-manager'
         );
+
+        // Helper
+        App::bind('module', function () {
+            return new \Uccello\RecordManager\Helpers\Module;
+        });
     }
 }

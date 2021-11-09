@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
-use Uccello\ModuleManager\View\Components\TableTh;
 use Uccello\ModuleManager\Http\Livewire\ModuleManager;
+use Uccello\ModuleManager\View\Components\Table\Search;
+use Uccello\ModuleManager\View\Components\Table\Td;
+use Uccello\ModuleManager\View\Components\Table\Th;
 
 /**
  * App Service Provider
@@ -40,7 +42,9 @@ class AppServiceProvider extends ServiceProvider
         ], 'module-manager-config');
 
         Blade::components([
-            'table-th' =>  TableTh::class,
+            'table-th' =>  Th::class,
+            'table-td' =>  Td::class,
+            'table-search' =>  Search::class,
         ], 'uc');
 
         Livewire::component('module-manager', ModuleManager::class);

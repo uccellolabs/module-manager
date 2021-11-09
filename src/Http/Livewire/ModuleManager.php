@@ -115,6 +115,12 @@ class ModuleManager extends Component
             $query->orderBy($this->sortField, $this->sortOrder);
         }
 
+        if (!empty($this->search)) {
+            foreach ($this->search as $key => $val) {
+                $query->where($key, 'like', "%$val%");
+            }
+        }
+
         return $query->paginate($this->length);
     }
 

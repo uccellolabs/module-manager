@@ -193,9 +193,11 @@ class Field
      */
     public function value($record)
     {
-        $uitypeInstance = $this->getUitypeInstance();
+        return $record->{$this->column};
 
-        return $uitypeInstance ? $uitypeInstance->value($this, $record) : '';
+        // $uitypeInstance = $this->getUitypeInstance();
+
+        // return $uitypeInstance ? $uitypeInstance->value($this, $record) : '';
     }
 
     /**

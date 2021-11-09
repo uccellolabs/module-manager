@@ -1,5 +1,5 @@
 {
-    "name": "uccello/record-manager",
+    "name": "uccello/module-manager",
     "description": "A complete CRUD solution to manage records in a Laravel project.",
     "type": "library",
     "license": "MIT",
@@ -14,18 +14,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Uccello\\RecordManager\\": "src/"
+            "Uccello\\ModuleManager\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Uccello\\RecordManager\\Tests\\": "tests/"
+            "Uccello\\ModuleManager\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Uccello\\RecordManager\\Providers\\AppServiceProvider"
+                "Uccello\\ModuleManager\\Providers\\AppServiceProvider"
             ]
         }
     },

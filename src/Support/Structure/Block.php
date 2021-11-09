@@ -1,9 +1,10 @@
 <?php
 
-namespace Uccello\RecordManager\Support\Structure;
+namespace Uccello\ModuleManager\Support\Structure;
 
 class Block
 {
+    public $module;
     public $name;
     public $icon;
     public $closed = false;
@@ -13,10 +14,13 @@ class Block
     /**
      * Constructor
      *
+     * @param Uccello\ModuleManager\Support\Structure\Module $module
      * @param \stdClass|array|null $data
      */
-    public function __construct($data = null)
+    public function __construct(Module $module, $data = null)
     {
+        $this->module = $module;
+
         if ($data === null || is_object($data) || is_array($data)) {
             // Convert to stdClass if necessary
             if (is_array($data)) {
@@ -37,9 +41,9 @@ class Block
      * Initialize fields collection if necessary.
      * Convert stdClass to Field if necessary.
      *
-     * @param \stdClass|array|\Uccello\RecordManager\Support\Structure\Field $field
+     * @param \stdClass|array|\Uccello\ModuleManager\Support\Structure\Field $field
      *
-     * @return \Uccello\RecordManager\Support\Structure\Field
+     * @return \Uccello\ModuleManager\Support\Structure\Field
      */
     public function addField($field)
     {

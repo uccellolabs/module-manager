@@ -1,9 +1,10 @@
 <?php
 
-namespace Uccello\RecordManager\Support\Structure;
+namespace Uccello\ModuleManager\Support\Structure;
 
 class Tab
 {
+    public $module;
     public $name;
     public $icon;
     public $blocks = [];
@@ -11,10 +12,13 @@ class Tab
     /**
      * Constructor
      *
-     * @param \stdclass|array|null $data
+     * @param Uccello\ModuleManager\Support\Structure\Module $module
+     * @param \stdClass|array|null $data
      */
-    public function __construct($data = null)
+    public function __construct(Module $module, $data = null)
     {
+        $this->module = $module;
+
         if ($data === null || is_object($data) || is_array($data)) {
             // Convert to stdClass if necessary
             if (is_array($data)) {
@@ -35,9 +39,9 @@ class Tab
      * Initialize blocks collection if necessary.
      * Convert stdClass to Block if necessary.
      *
-     * @param \stdClass|array|\Uccello\RecordManager\Support\Structure\Block $block
+     * @param \stdClass|array|\Uccello\ModuleManager\Support\Structure\Block $block
      *
-     * @return \Uccello\RecordManager\Support\Structure\Block
+     * @return \Uccello\ModuleManager\Support\Structure\Block
      */
     public function addBlock($block)
     {

@@ -1,12 +1,13 @@
 <?php
 
-namespace Uccello\RecordManager\Providers;
+namespace Uccello\ModuleManager\Providers;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
-use Uccello\RecordManager\Http\Livewire\RecordManager;
+use Uccello\ModuleManager\View\Components\TableTh;
+use Uccello\ModuleManager\Http\Livewire\ModuleManager;
 
 /**
  * App Service Provider
@@ -23,39 +24,39 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // Views
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'record-manager');
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'module-manager');
 
         // Translations
-        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'record-manager');
+        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'module-manager');
 
         // Publish assets
         $this->publishes([
-            __DIR__ . '/../../public' => public_path('vendor/uccello/record-manager'),
-        ], 'record-manager-assets');
+            __DIR__ . '/../../public' => public_path('vendor/uccello/module-manager'),
+        ], 'module-manager-assets');
 
         // Publish config
         $this->publishes([
-            __DIR__.'/../../config/record-manager.php' => config_path('record-manager.php')
-        ], 'record-manager-config');
+            __DIR__.'/../../config/module-manager.php' => config_path('module-manager.php')
+        ], 'module-manager-config');
 
-        // Blade::components([
-        //     //
-        // ], 'rm');
+        Blade::components([
+            'table-th' =>  TableTh::class,
+        ], 'uc');
 
-        Livewire::component('record-manager', RecordManager::class);
+        Livewire::component('module-manager', ModuleManager::class);
     }
 
     public function register()
     {
         // Config
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/record-manager.php',
-            'record-manager'
+            __DIR__ . '/../../config/module-manager.php',
+            'module-manager'
         );
 
         // Helper
         App::bind('module', function () {
-            return new \Uccello\RecordManager\Helpers\Module;
+            return new \Uccello\ModuleManager\Helpers\Module;
         });
     }
 }

@@ -7,4 +7,4 @@ mix.postCss("./resources/css/styles.css", "public/css", [
 ])
 .version()
 
-// mix.copyDirectory('public', '../../../public/vendor/uccello/record-manager')
+// mix.copyDirectory('public', '../../../public/vendor/uccello/module-manager')

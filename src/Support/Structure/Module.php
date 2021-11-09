@@ -1,6 +1,6 @@
 <?php
 
-namespace Uccello\RecordManager\Support\Structure;
+namespace Uccello\ModuleManager\Support\Structure;
 
 use Illuminate\Support\Str;
 
@@ -30,17 +30,17 @@ class Module
 
     public function tabs()
     {
-        return [];
+        return collect();
     }
 
     public function filters()
     {
-        return [];
+        return collect();
     }
 
     public function relatedLists()
     {
-        return [];
+        return collect();
     }
 
     public function blocks()

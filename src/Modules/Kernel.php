@@ -1,6 +1,6 @@
 <?php
 
-namespace Uccello\RecordManager\Modules;
+namespace Uccello\ModuleManager\Modules;
 
 class Kernel
 {

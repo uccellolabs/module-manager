@@ -1,6 +1,6 @@
 <?php
 
-namespace Uccello\RecordManager\Helpers;
+namespace Uccello\ModuleManager\Helpers;
 
 class Module
 {

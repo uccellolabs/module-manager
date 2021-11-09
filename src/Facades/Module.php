@@ -1,6 +1,6 @@
 <?php
 
-namespace Uccello\RecordManager\Facades;
+namespace Uccello\ModuleManager\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

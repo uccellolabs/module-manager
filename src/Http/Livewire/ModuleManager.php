@@ -23,12 +23,17 @@ class ModuleManager extends Component
     protected $queryString = [
         'sortField',
         'sortOrder' => ['except' => 'asc'],
-        'search'
+        'search',
+        'recordId',
     ];
 
     public function mount()
     {
         $this->getdisplayedFieldNames();
+
+        if ($this->recordId) {
+            $this->isDetailViewOpen = true;
+        }
     }
 
     public function render()

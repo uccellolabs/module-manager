@@ -2,14 +2,17 @@
 
 namespace Uccello\ModuleManager\Support\Structure;
 
+use Uccello\ModuleManager\Facades\Module;
+
 class Block
 {
     public $module;
+    public $tab;
     public $name;
     public $icon;
     public $closed = false;
     public $info;
-    public $fields = [];
+    public $fields;
 
     /**
      * Constructor
@@ -17,9 +20,11 @@ class Block
      * @param Uccello\ModuleManager\Support\Structure\Module $module
      * @param \stdClass|array|null $data
      */
-    public function __construct(Module $module, $data = null)
+    public function __construct(Tab $tab, $data = null)
     {
-        $this->module = $module;
+        $this->module = $tab->module;
+        $this->tab = $tab;
+        $this->fields = collect();
 
         if ($data === null || is_object($data) || is_array($data)) {
             // Convert to stdClass if necessary
@@ -34,6 +39,27 @@ class Block
         } else {
             throw new \Exception('First argument must be an object or an array');
         }
+    }
+
+    /**
+     * Getter to retrieve an attribute.
+     *
+     * @param string $attribute
+     *
+     * @return mixed
+     */
+    public function __get(string $attribute)
+    {
+        if ($attribute === 'label') {
+            return $this->label();
+        }
+
+        return $this->{$attribute};
+    }
+
+    public function label()
+    {
+        return Module::trans('block.'.$this->name, $this->module);
     }
 
     /**
@@ -54,7 +80,7 @@ class Block
 
         // Convert field if necessary
         if ($field instanceof Field === false) {
-            $field = new Field($field);
+            $field = new Field($this, $field);
         }
 
         // Add field
@@ -75,15 +101,51 @@ class Block
     {
         $isVisible = false;
 
-        if ($this->fields) {
-            foreach ($this->fields as $field) {
-                if ($field->isVisible($viewName)) {
-                    $isVisible = true;
-                    break;
-                }
+        foreach ($this->fields as $field) {
+            $field = new Field($this->module, $field);
+            if ($field->isVisible($viewName)) {
+                $isVisible = true;
+                break;
             }
         }
 
         return $isVisible;
+    }
+
+    /**
+     * Check if field is visible in create view.
+     *
+     * @return boolean
+     */
+    public function isVisibleInCreateView()
+    {
+        return $this->isVisible('create');
+    }
+
+    /**
+     * Check if field is visible in edit view.
+     *
+     * @return boolean
+     */
+    public function isVisibleInEditView()
+    {
+        return $this->isVisible('edit');
+    }
+
+    /**
+     * Check if field is visible in detail view.
+     *
+     * @return boolean
+     */
+    public function isVisibleInDetailView()
+    {
+        return $this->isVisible('detail');
+    }
+
+    public function fieldsVisibleInDetailView()
+    {
+        return $this->fields->filter(function ($field) {
+            return $field->isVisibleInDetailView();
+        });
     }
 }

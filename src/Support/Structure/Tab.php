@@ -2,12 +2,15 @@
 
 namespace Uccello\ModuleManager\Support\Structure;
 
+use Uccello\ModuleManager\Facades\Module as FacadesModule;
+use Uccello\ModuleManager\Support\Structure\Module;
+
 class Tab
 {
     public $module;
     public $name;
     public $icon;
-    public $blocks = [];
+    public $blocks;
 
     /**
      * Constructor
@@ -18,6 +21,7 @@ class Tab
     public function __construct(Module $module, $data = null)
     {
         $this->module = $module;
+        $this->blocks = collect();
 
         if ($data === null || is_object($data) || is_array($data)) {
             // Convert to stdClass if necessary
@@ -32,6 +36,27 @@ class Tab
         } else {
             throw new \Exception('First argument must be an object');
         }
+    }
+
+    /**
+     * Getter to retrieve an attribute.
+     *
+     * @param string $attribute
+     *
+     * @return mixed
+     */
+    public function __get(string $attribute)
+    {
+        if ($attribute === 'label') {
+            return $this->label();
+        }
+
+        return $this->{$attribute};
+    }
+
+    public function label()
+    {
+        return FacadesModule::trans('tab.'.$this->name, $this->module);
     }
 
     /**
@@ -52,7 +77,7 @@ class Tab
 
         // Convert block if necessary
         if ($block instanceof Block === false) {
-            $block = new Block($block);
+            $block = new Block($this, $block);
         }
 
         // Add block

@@ -15,7 +15,10 @@ class ModuleManager extends Component
     public $sortOrder;
     public $search;
     public $length = 15;
-    public $visibleFields = [];
+    public $displayedFieldNames = [];
+    public $selection = [];
+    public $isDetailViewOpen = false;
+    public $recordId;
 
     protected $queryString = [
         'sortField',
@@ -25,7 +28,7 @@ class ModuleManager extends Component
 
     public function mount()
     {
-        $this->getVisibleFields();
+        $this->getdisplayedFieldNames();
     }
 
     public function render()
@@ -33,7 +36,8 @@ class ModuleManager extends Component
         return view('module-manager::livewire.module-manager', [
             'module' => $this->getModule(),
             'filter' => $this->getDefaultFilter(),
-            'records' => $this->getRecords()
+            'records' => $this->getRecords(),
+            'currentRecord' => $this->loadCurrentRecord(),
         ]);
     }
 
@@ -81,15 +85,31 @@ class ModuleManager extends Component
      */
     public function toggleFieldVisibility($fieldName)
     {
-        $fieldNames = collect($this->visibleFields);
+        $fieldNames = collect($this->displayedFieldNames);
 
         if ($fieldNames->contains($fieldName)) {
-            $this->visibleFields = $fieldNames->filter(function ($name) use ($fieldName) {
+            $this->displayedFieldNames = $fieldNames->filter(function ($name) use ($fieldName) {
                 return $name !== $fieldName;
             })->toArray();
         } else {
-            $this->visibleFields[] = $fieldName;
+            $this->displayedFieldNames[] = $fieldName;
         }
+    }
+
+    public function deleteSelectedRecords()
+    {
+        $recordModel = $this->getRecordModel();
+
+        $recordModel->destroy($this->selection);
+
+        $this->selection = [];
+        $this->resetPage();
+    }
+
+    public function showDetailView($recordId)
+    {
+        $this->recordId = $recordId;
+        $this->isDetailViewOpen = true;
     }
 
     private function getModule()
@@ -99,15 +119,12 @@ class ModuleManager extends Component
 
     private function getDefaultFilter()
     {
-        return $this->getModule()->filters()->where('type', 'list')->first();
+        return $this->getModule()->filters->where('type', 'list')->first();
     }
 
     private function getRecords()
     {
-        $module = $this->getModule();
-
-        $model = $module->model;
-        $recordModel = new $model;
+        $recordModel = $this->getRecordModel();
 
         $query = $recordModel::query();
 
@@ -124,19 +141,40 @@ class ModuleManager extends Component
         return $query->paginate($this->length);
     }
 
+    private function loadCurrentRecord()
+    {
+        if (!$this->recordId) {
+            return;
+        }
+
+        $recordModel = $this->getRecordModel();
+
+        return $recordModel->find($this->recordId);
+    }
+
+    private function getRecordModel()
+    {
+        $module = $this->getModule();
+
+        $model = $module->model;
+        $recordModel = new $model;
+
+        return $recordModel;
+    }
+
     /**
      * Detect fields to display by default
      *
      * @return array
      */
-    private function getVisibleFields()
+    private function getdisplayedFieldNames()
     {
-        $this->visibleFields = [];
+        $this->displayedFieldNames = [];
 
-        if (empty($this->visibleFields)) {
-            $this->visibleFields = $this->getDefaultFilter()->columns;
+        if (empty($this->displayedFieldNames)) {
+            $this->displayedFieldNames = $this->getDefaultFilter()->columns;
         }
 
-        return $this->visibleFields;
+        return $this->displayedFieldNames;
     }
 }

@@ -2,9 +2,12 @@
 
 namespace Uccello\ModuleManager\Support\Structure;
 
+use Uccello\ModuleManager\Facades\Module;
+
 class Field
 {
     public $module;
+    public $block;
     public $name;
     public $column;
     public $type = 'string';
@@ -17,12 +20,13 @@ class Field
     /**
      * Constructor
      *
-     * @param Uccello\ModuleManager\Support\Structure\Module $module
+     * @param Uccello\ModuleManager\Support\Structure\Block $block
      * @param \stdClass|array|null $data
      */
-    public function __construct(Module $module, $data = null)
+    public function __construct(Block $block, $data = null)
     {
-        $this->module = $module;
+        $this->module = $block->module;
+        $this->block = $block;
 
         if ($data === null || is_object($data) || is_array($data)) {
             // Convert to stdClass if necessary
@@ -42,6 +46,27 @@ class Field
         } else {
             throw new \Exception('First argument must be an object or an array');
         }
+    }
+
+    /**
+     * Getter to retrieve an attribute.
+     *
+     * @param string $attribute
+     *
+     * @return mixed
+     */
+    public function __get(string $attribute)
+    {
+        if ($attribute === 'label') {
+            return $this->label();
+        }
+
+        return $this->{$attribute};
+    }
+
+    public function label()
+    {
+        return Module::trans('field.'.$this->name, $this->module);
     }
 
     /**

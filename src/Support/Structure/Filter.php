@@ -42,4 +42,23 @@ class Filter
             return new Field($this->module, $field);
         });
     }
+
+    public function fieldsVisibleInListView()
+    {
+        return $this->module->fields()->filter(function ($field) {
+            return $field->isVisibleInListView();
+        });
+    }
+
+    public function fieldsDisplayedInListView($displayedFieldNames)
+    {
+        return $this->fieldsVisibleInListView()->filter(function ($field) use ($displayedFieldNames) {
+            return in_array($field->name, $displayedFieldNames);
+        });
+    }
+
+    public function isFieldDisplayedInListView($field, $displayedFieldNames)
+    {
+        return in_array($field->name, $displayedFieldNames);
+    }
 }

@@ -1,6 +1,6 @@
 <th class="sticky top-0 p-2 text-left align-top bg-white" x-data="{over:false}">
     <div class="flex justify-between cursor-pointer" wire:click="changeSortOrder('{{ $fieldName }}')" x-on:mouseover="over=true" x-on:mouseout="over=false">
-        <span :class="{'text-accent-500': over}" class="whitespace-nowrap">{{ app('module')->trans('field.'.$fieldName, $module) }}</span>
+        <span :class="{'text-blue-500': over}" class="whitespace-nowrap">{{ app('module')->trans('field.'.$fieldName, $module) }}</span>
 
         @if ($sortFieldName === $fieldName)
         <div class="flex flex-col items-center justify-center">

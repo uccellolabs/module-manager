@@ -17,8 +17,12 @@ class ModuleManager extends Component
     public $length = 15;
     public $displayedFieldNames = [];
     public $selection = [];
-    public $isDetailViewOpen = false;
+    public $isDetailing = false;
+    public $isEditing = false;
+    public $isCreating = false;
     public $recordId;
+
+    public object $currentRecord;
 
     protected $queryString = [
         'sortField',
@@ -27,12 +31,38 @@ class ModuleManager extends Component
         'recordId',
     ];
 
+    protected function rules()
+    {
+        $rules = [];
+
+        $module = $this->getModule();
+
+        foreach ($module->fields as $field) {
+            if (($this->isEditing && !$field->isVisibleInEditView()) || ($this->isCreating && !$field->isVisibleInCreateView())) {
+                continue;
+            }
+
+            if (!empty($field->rules)) {
+                $allRules = implode('|', $field->rules);
+                $rules['currentRecord.'.$field->column] = str_replace('%id%', $this->currentRecord->getKey(), $allRules);
+            } elseif ($field->required ?? false) {
+                $rules['currentRecord.'.$field->column] = 'required';
+            } else {
+                $rules['currentRecord.'.$field->column] = 'string';
+            }
+        }
+
+        return $rules;
+    }
+
     public function mount()
     {
-        $this->getdisplayedFieldNames();
+        $this->getDisplayedFieldNames();
+
+        $this->loadCurrentRecord();
 
         if ($this->recordId) {
-            $this->isDetailViewOpen = true;
+            $this->isDetailing = true;
         }
     }
 
@@ -42,7 +72,6 @@ class ModuleManager extends Component
             'module' => $this->getModule(),
             'filter' => $this->getDefaultFilter(),
             'records' => $this->getRecords(),
-            'currentRecord' => $this->loadCurrentRecord(),
         ]);
     }
 
@@ -111,10 +140,58 @@ class ModuleManager extends Component
         $this->resetPage();
     }
 
+    public function deleteCurrentRecord()
+    {
+        $this->currentRecord->delete();
+
+        $this->isEditing = false;
+        $this->isDetailing = false;
+        $this->isCreating = false;
+
+        $this->reset('recordId');
+        $this->resetPage();
+    }
+
     public function showDetailView($recordId)
     {
         $this->recordId = $recordId;
-        $this->isDetailViewOpen = true;
+        $this->loadCurrentRecord();
+
+        $this->isDetailing = true;
+        $this->isEditing = false;
+        $this->isCreating = false;
+    }
+
+    public function showEditView($recordId)
+    {
+        $this->recordId = $recordId;
+        $this->loadCurrentRecord();
+
+        $this->isDetailing = false;
+        $this->isEditing = true;
+        $this->isCreating = false;
+    }
+
+    public function showCreateView()
+    {
+        $this->recordId = null;
+
+        $recordModel = $this->getRecordModel();
+
+        $this->currentRecord = new $recordModel;
+
+        $this->isDetailing = false;
+        $this->isEditing = false;
+        $this->isCreating = true;
+    }
+
+    public function save()
+    {
+        $this->validate();
+
+        $this->currentRecord->save();
+
+        $this->showDetailView($this->currentRecord->getKey());
     }
 
     private function getModule()
@@ -154,7 +231,10 @@ class ModuleManager extends Component
 
         $recordModel = $this->getRecordModel();
 
-        return $recordModel->find($this->recordId);
+        $record = $recordModel->find($this->recordId);
+        if ($record) {
+            $this->currentRecord = $record;
+        }
     }
 
     private function getRecordModel()
@@ -172,7 +252,7 @@ class ModuleManager extends Component
      *
      * @return array
      */
-    private function getdisplayedFieldNames()
+    private function getDisplayedFieldNames()
     {
         $this->displayedFieldNames = [];
 

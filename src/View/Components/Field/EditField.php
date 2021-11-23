@@ -1,13 +1,13 @@
 <?php
 
-namespace Uccello\ModuleManager\View\Components\Detail;
+namespace Uccello\ModuleManager\View\Components\Field;
 
 use Illuminate\View\Component;
 use Uccello\ModuleManager\Facades\Module as FacadesModule;
 use Uccello\ModuleManager\Support\Structure\Field;
 use Uccello\ModuleManager\Support\Structure\Module;
 
-class Value extends Component
+class EditField extends Component
 {
     public $value;
 
@@ -41,8 +41,10 @@ class Value extends Component
      */
     public function render()
     {
-        return view('module-manager::components.detail.value', [
-            'module' => $this->module
+        return view('module-manager::components.field.edit-field', [
+            'module' => $this->module,
+            'record' => $this->record,
+            'field' => $this->field,
         ]);
     }
 
@@ -57,8 +59,8 @@ class Value extends Component
         $this->viewName = FacadesModule::view(
             $module->package,
             $module,
-            "uitype.detail.{$this->field->type}",
-            "module-manager::modules.default.uitype.detail.string"
+            "uitype.edit.{$this->field->type}",
+            "module-manager::modules.default.uitype.edit.string"
         );
     }
 }

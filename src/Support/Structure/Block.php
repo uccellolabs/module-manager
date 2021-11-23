@@ -102,7 +102,7 @@ class Block
         $isVisible = false;
 
         foreach ($this->fields as $field) {
-            $field = new Field($this->module, $field);
+            $field = new Field($this, $field);
             if ($field->isVisible($viewName)) {
                 $isVisible = true;
                 break;
@@ -146,6 +146,13 @@ class Block
     {
         return $this->fields->filter(function ($field) {
             return $field->isVisibleInDetailView();
+        });
+    }
+
+    public function fieldsVisibleInEditView()
+    {
+        return $this->fields->filter(function ($field) {
+            return $field->isVisibleInEditView();
         });
     }
 }

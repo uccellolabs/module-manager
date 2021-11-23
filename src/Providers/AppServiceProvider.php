@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Uccello\ModuleManager\Http\Livewire\ModuleManager;
-use Uccello\ModuleManager\View\Components\Detail\Value;
+use Uccello\ModuleManager\View\Components\Field\DetailField;
+use Uccello\ModuleManager\View\Components\Field\EditField;
 use Uccello\ModuleManager\View\Components\Table\Search;
 use Uccello\ModuleManager\View\Components\Table\Td;
 use Uccello\ModuleManager\View\Components\Table\Th;
@@ -43,10 +44,11 @@ class AppServiceProvider extends ServiceProvider
         ], 'module-manager-config');
 
         Blade::components([
-            'table-th' =>  Th::class,
-            'table-td' =>  Td::class,
-            'table-search' =>  Search::class,
-            'detail-value' =>  Value::class,
+            'table-th' => Th::class,
+            'table-td' => Td::class,
+            'table-search' => Search::class,
+            'detail-field' => DetailField::class,
+            'edit-field' =>  EditField::class,
         ], 'uc');
 
         Livewire::component('module-manager', ModuleManager::class);

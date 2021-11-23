@@ -13,6 +13,7 @@ class Field
     public $type = 'string';
     public $visible = true;
     public $required = false;
+    public $large = false;
     public $rules;
     public $info;
     public $options;

@@ -16,6 +16,7 @@ class Field
     public $large = false;
     public $rules;
     public $info;
+    public $default;
     public $options;
 
     /**

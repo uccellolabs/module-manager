@@ -2,7 +2,8 @@
     <form wire:submit.prevent="save" autocomplete="off" autocapitalize="off" novalidate>
         <div class="flex justify-center w-full mt-8">
             {{-- Modal --}}
-            <div class="w-full h-full bg-white rounded-lg md:h-auto md:mb-6 md:w-5/6 lg:w-3/6 xl:1/2" x-on:click.away="isEditing=false; isCreating=false; $wire.recordId=null">
+            {{-- <div class="w-full h-full bg-white rounded-lg md:h-auto md:mb-6 md:w-5/6 lg:w-3/6 xl:1/2" x-on:click.away="isEditing=false; isCreating=false; $wire.recordId=null"> --}}
+            <div class="w-full h-full bg-white rounded-lg md:h-auto md:mb-6 md:w-5/6 lg:w-3/6 xl:1/2">
                 {{-- Title --}}
                 <div class="flex justify-end py-4 pl-8 pr-4 space-x-4 border-b border-gray-200">
 
